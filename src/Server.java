@@ -11,6 +11,7 @@ public class Server {
 	
 	Server(int port, ServerWindow sw) {
 		this.port = port;
+		
 		this.sw = sw;
 		try {
 			ss = new ServerSocket(port);
