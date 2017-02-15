@@ -1,21 +1,30 @@
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JTextArea;
+import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
+import javax.swing.JComboBox;
 
 public class ServerWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextArea ConsoleBox;
+	private DefaultListModel listModel;
+	private DefaultListModel ConsoleBoxM;
+	private Server server;
 	/**
 	 * Launch the application.
 	 */
@@ -39,6 +48,7 @@ public class ServerWindow extends JFrame {
 	
 	
 	public ServerWindow() {
+		setTitle("ServerM Alpha 0.0.1");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 718, 577);
@@ -47,9 +57,7 @@ public class ServerWindow extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JList list = new JList();
-		list.setBounds(12, 215, 166, 314);
-		contentPane.add(list);
+		
 		
 		JLabel lblSunucuDurumu = new JLabel("Sunucu Bilgileri");
 		lblSunucuDurumu.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -116,17 +124,47 @@ public class ServerWindow extends JFrame {
 		lblSunucuKonso.setBounds(263, 16, 128, 19);
 		contentPane.add(lblSunucuKonso);
 		
-		ConsoleBox = new JTextArea();
-		ConsoleBox.setLineWrap(true);
-		ConsoleBox.setEditable(false);
+		
+		listModel = new DefaultListModel();
+		JList list = new JList(listModel);
+		list.setBounds(12, 215, 166, 314);
+		contentPane.add(list);
+		
+		ConsoleBoxM = new DefaultListModel();
+		JList ConsoleBox = new JList(ConsoleBoxM);
 		ConsoleBox.setBounds(286, 45, 414, 484);
-		addLogToConsoleBox("sa");
-		addLogToConsoleBox("as");
 		contentPane.add(ConsoleBox);
+		
+		server = new Server(7000,this);
 	}
 	
 	public void addLogToConsoleBox(String log) {
-		String old = ConsoleBox.getText();
-		ConsoleBox.setText(old + "[SERVER] " + log + "\n");
+		Date d1 = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY-HH:mm");
+		String formattedDate = df.format(d1);
+		String logtext = "["+formattedDate+"] "+log;
+		ConsoleBoxM.addElement(logtext);
+		d1 = null;
+		df = null;
+	}
+	
+	public void addLogToConsoleBox(String log, int logtype) {
+		String [] types;
+		types = new String[3];
+		types[0] = "HATA";
+		types[1] = "BÝLGÝ";
+		types[2] = "KULLANICI";
+		Date d1 = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/YYYY-HH:mm");
+		String formattedDate = df.format(d1);
+		String logtext = "["+formattedDate+"] "+"["+types[logtype]+"] "+log;
+		ConsoleBoxM.addElement(logtext);
+		d1 = null;
+		df = null;
+	}
+	
+	public void exitServer(String hata) {
+		JOptionPane.showMessageDialog(null,"Sunucu açýlýrken bir hata oluþtu: "+hata);
+		System.exit(0);
 	}
 }
