@@ -134,8 +134,9 @@ public class ServerWindow extends JFrame {
 		JList ConsoleBox = new JList(ConsoleBoxM);
 		ConsoleBox.setBounds(286, 45, 414, 484);
 		contentPane.add(ConsoleBox);
-		
 		server = new Server(7000,this);
+		Thread sthread = new Thread(server);
+		sthread.start();
 	}
 	
 	public void addLogToConsoleBox(String log) {
